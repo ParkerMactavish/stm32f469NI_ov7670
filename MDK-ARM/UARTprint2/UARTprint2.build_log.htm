@@ -29,15 +29,17 @@ Project File Date:  08/13/2018
 Build target 'UARTprint2'
 compiling OV7670.c...
 compiling main.c...
-../Src/main.c(230): warning:  #177-D: variable "tmpData"  was declared but never referenced
-  				uint8_t tmpData = 0x00;
-../Src/main.c(232): warning:  #177-D: variable "tmpDataHex"  was declared but never referenced
-  				uint8_t tmpDataHex[2];
-../Src/main.c: 2 warnings, 0 errors
+../Src/main.c(235): warning:  #177-D: variable "tmpData"  was declared but never referenced
+  					uint8_t tmpData = 0x00;
+../Src/main.c(237): warning:  #177-D: variable "tmpDataHex"  was declared but never referenced
+  					uint8_t tmpDataHex[2];
+../Src/main.c(143): warning:  #177-D: variable "ContainerInHex"  was declared but never referenced
+  	char ContainerInHex[2];
+../Src/main.c: 3 warnings, 0 errors
 linking...
-Program Size: Code=19620 RO-data=7748 RW-data=104 ZI-data=2224  
+Program Size: Code=20396 RO-data=7748 RW-data=108 ZI-data=2228  
 FromELF: creating hex file...
-"UARTprint2\UARTprint2.axf" - 0 Error(s), 2 Warning(s).
+"UARTprint2\UARTprint2.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -60,7 +62,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.1.2
-Build Time Elapsed:  00:00:06
+Build Time Elapsed:  00:00:29
 </pre>
 </body>
 </html>

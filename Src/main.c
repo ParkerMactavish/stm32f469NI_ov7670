@@ -154,14 +154,20 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	I2C_WriteByte(0x12, 0x80, ADDR_OV7670);
 	HAL_Delay(50);
-	I2C_WriteByte(0x12, 0x14, ADDR_OV7670);
+//	I2C_WriteByte(0x12, 0x14, ADDR_OV7670);
 	HAL_Delay(50);
-	I2C_ReadByte(Container, 1, 0x12, ADDR_OV7670);	
-	ContainerInHex[0]=Container[0]/16+'0';
-	ContainerInHex[1]=Container[0]%16+'0';
-	HAL_UART_Transmit(&huart3, (uint8_t*)ContainerInHex, 2, 0xFFFF);
-	HAL_UART_Transmit(&huart3, (uint8_t*) "\r\n", 4, 0xFFFF);
+	//Sensor_Init();
 	
+	
+	I2C_ReadByte(Container, 1, 0x12, ADDR_OV7670);	
+	printf("0x12:%X\n\r", Container[0]);
+	
+	for(uint8_t i=0; i<202; i++)
+	{
+		I2C_ReadByte(Container, 1, i, ADDR_OV7670);	
+		printf("%X:%X\n\r",i, Container[0]);
+		HAL_Delay(10);
+	}
 	BSP_LCD_Init();
 	BSP_LCD_LayerDefaultInit(0, LCD_FB_START_ADDRESS);
 	BSP_LCD_SelectLayer(0);
@@ -201,7 +207,6 @@ int main(void)
 //		HAL_UART_Transmit(&huart3, (uint8_t*)photoTakeTimeElapseHex, 6, 0xFFFF);
 //		HAL_UART_Transmit(&huart3, (uint8_t*) "\r\n", 4, 0xFFFF);
 		
-		
 		if( vsyncStatus == 2 )
 		{  
 //			HAL_UART_Transmit(&huart3, (uint8_t*)"It can turn into 2\n\r", 22, 0xFFFF);
@@ -209,7 +214,7 @@ int main(void)
 			RRST_L(); 
 			RCLK_L();
 			
-			for(int i=0; i<100; i++);
+			for(int i=0; i<100	; i++);
 			
 			RCLK_H();
 			RRST_H();
@@ -223,84 +228,84 @@ int main(void)
 //			{
 			for(int yAxis=0; yAxis<240; yAxis++)
 			{
-			for(int xAxis=0; xAxis<320; xAxis++)
-			{
-				RCLK_L();
-				
-				uint8_t tmpData = 0x00;
-				uint8_t redVal=0x00, greenVal=0x00, blueVal=0x00;
-				uint8_t tmpDataHex[2];
-				uint32_t mixed=0xFF000000;
-				
-				redVal |=	 ((Data3_GPIO_Port->IDR & Data3_Pin)>>2)
-									|((Data4_GPIO_Port->IDR & Data4_Pin)>>5)
-									|((Data5_GPIO_Port->IDR & Data5_Pin)>>9)
-									|((Data3_GPIO_Port->IDR & Data3_Pin)<<1)
-									|((Data4_GPIO_Port->IDR & Data4_Pin)>>2)
-									|((Data5_GPIO_Port->IDR & Data5_Pin)>>6)
-									|((Data6_GPIO_Port->IDR & Data6_Pin)>>4)
-									|((Data7_GPIO_Port->IDR & Data7_Pin));
-				
-				greenVal |=	 (Data0_GPIO_Port->IDR & Data0_Pin>>8)
-										|((Data1_GPIO_Port->IDR & Data1_Pin)<<5)
-										|((Data2_GPIO_Port->IDR & Data2_Pin)>>5);
-				
-//				tmpData |= (Data0_GPIO_Port->IDR & Data0_Pin>>13)
-//									|((Data1_GPIO_Port->IDR & Data1_Pin))
-//									|((Data2_GPIO_Port->IDR & Data2_Pin)>>10)
-//									|((Data3_GPIO_Port->IDR & Data3_Pin)<<1)
-//									|((Data4_GPIO_Port->IDR & Data4_Pin)>>2)
-//									|((Data5_GPIO_Port->IDR & Data5_Pin)>>6)
-//									|((Data6_GPIO_Port->IDR & Data6_Pin)>>4)
-//									|((Data7_GPIO_Port->IDR & Data7_Pin));	  /* ( GPIO_ReadInputData(GPIOC) << 8 ) & 0xff00; */
-				
-//				printf("1:");
-//				if(Data0_GPIO_Port->IDR&Data0_Pin) printf("1"); else printf("0");				
-//				if(Data1_GPIO_Port->IDR&Data1_Pin) printf("1"); else printf("0");
-//				if(Data2_GPIO_Port->IDR&Data2_Pin) printf("1"); else printf("0");
-//				if(Data3_GPIO_Port->IDR&Data3_Pin) printf("1"); else printf("0");
-//				if(Data4_GPIO_Port->IDR&Data4_Pin) printf("1"); else printf("0");
-//				if(Data5_GPIO_Port->IDR&Data5_Pin) printf("1"); else printf("0");
-//				if(Data6_GPIO_Port->IDR&Data6_Pin) printf("1"); else printf("0");
-//				if(Data7_GPIO_Port->IDR&Data7_Pin) printf("1"); else printf("0");
-//				printf("\r\n");
-				RCLK_H();
-				
-				
-//				tmpDataHex[0]=tmpData/16+'0';
-//				tmpDataHex[1]=tmpData%16+'0';
-				//HAL_UART_Transmit(&huart3, tmpDataHex, 2, 0xFFFF);
-				for(int i=0; i<100; i++);
-				
-				RCLK_L();
-//				tmpData=0x00;
-//				tmpData |= (Data0_GPIO_Port->IDR & Data0_Pin>>13)
-//									|((Data1_GPIO_Port->IDR & Data1_Pin))
-//									|((Data2_GPIO_Port->IDR & Data2_Pin)>>10)
-//									|((Data3_GPIO_Port->IDR & Data3_Pin)<<1)
-//									|((Data4_GPIO_Port->IDR & Data4_Pin)>>2)
-//									|((Data5_GPIO_Port->IDR & Data5_Pin)>>6)
-//									|((Data6_GPIO_Port->IDR & Data6_Pin)>>4)
-//									|((Data7_GPIO_Port->IDR & Data7_Pin));	  /* ( GPIO_ReadInputData(GPIOC) ) & 0x00ff; */
-				greenVal |=  ((Data6_GPIO_Port->IDR & Data6_Pin)>>10)
-									  |((Data7_GPIO_Port->IDR & Data7_Pin)>>6)
+				for(int xAxis=0; xAxis<320; xAxis++)
+				{
+					RCLK_L();
+					
+					uint8_t tmpData = 0x00;
+					uint32_t redVal=0x00, greenVal=0x00, blueVal=0x00;
+					uint8_t tmpDataHex[2];
+					uint32_t mixed=0xFF000000;
+					
+					redVal |=	 ((Data3_GPIO_Port->IDR & Data3_Pin)>>2)
+										|((Data4_GPIO_Port->IDR & Data4_Pin)>>5)
 										|((Data5_GPIO_Port->IDR & Data5_Pin)>>9)
-									  |((Data6_GPIO_Port->IDR & Data6_Pin)>>7)
-									  |((Data7_GPIO_Port->IDR & Data7_Pin)>>3);	
-				
-				blueVal |=   ((Data0_GPIO_Port->IDR & Data0_Pin)>>13)
-										|((Data1_GPIO_Port->IDR & Data1_Pin))
-										|((Data2_GPIO_Port->IDR & Data2_Pin)>>10)
-										|((Data0_GPIO_Port->IDR & Data0_Pin)>>10)
-										|((Data1_GPIO_Port->IDR & Data1_Pin)<<3)
-										|((Data2_GPIO_Port->IDR & Data2_Pin)>>7)
-										|((Data3_GPIO_Port->IDR & Data3_Pin)<<4)
-										|((Data4_GPIO_Port->IDR & Data4_Pin)<<1);
-										
-				mixed |= 0xff000000|redVal<<16 | greenVal<<8 | blueVal;
-				BSP_LCD_DrawPixel(xAxis, yAxis, mixed);
-				RCLK_H();
-			}
+										|((Data3_GPIO_Port->IDR & Data3_Pin)<<1)
+										|((Data4_GPIO_Port->IDR & Data4_Pin)>>2)
+										|((Data5_GPIO_Port->IDR & Data5_Pin)>>6)
+										|((Data6_GPIO_Port->IDR & Data6_Pin)>>4)
+										|((Data7_GPIO_Port->IDR & Data7_Pin));
+					
+					greenVal |=	 (Data0_GPIO_Port->IDR & Data0_Pin>>8)
+											|((Data1_GPIO_Port->IDR & Data1_Pin)<<5)
+											|((Data2_GPIO_Port->IDR & Data2_Pin)>>5);
+					
+	//				tmpData |= (Data0_GPIO_Port->IDR & Data0_Pin>>13)
+	//									|((Data1_GPIO_Port->IDR & Data1_Pin))
+	//									|((Data2_GPIO_Port->IDR & Data2_Pin)>>10)
+	//									|((Data3_GPIO_Port->IDR & Data3_Pin)<<1)
+	//									|((Data4_GPIO_Port->IDR & Data4_Pin)>>2)
+	//									|((Data5_GPIO_Port->IDR & Data5_Pin)>>6)
+	//									|((Data6_GPIO_Port->IDR & Data6_Pin)>>4)
+	//									|((Data7_GPIO_Port->IDR & Data7_Pin));	  /* ( GPIO_ReadInputData(GPIOC) << 8 ) & 0xff00; */
+					
+	//				printf("1:");
+	//				if(Data0_GPIO_Port->IDR&Data0_Pin) printf("1"); else printf("0");				
+	//				if(Data1_GPIO_Port->IDR&Data1_Pin) printf("1"); else printf("0");
+	//				if(Data2_GPIO_Port->IDR&Data2_Pin) printf("1"); else printf("0");
+	//				if(Data3_GPIO_Port->IDR&Data3_Pin) printf("1"); else printf("0");
+	//				if(Data4_GPIO_Port->IDR&Data4_Pin) printf("1"); else printf("0");
+	//				if(Data5_GPIO_Port->IDR&Data5_Pin) printf("1"); else printf("0");
+	//				if(Data6_GPIO_Port->IDR&Data6_Pin) printf("1"); else printf("0");
+	//				if(Data7_GPIO_Port->IDR&Data7_Pin) printf("1"); else printf("0");
+	//				printf("\r\n");
+					RCLK_H();
+					
+					
+	//				tmpDataHex[0]=tmpData/16+'0';
+	//				tmpDataHex[1]=tmpData%16+'0';
+					//HAL_UART_Transmit(&huart3, tmpDataHex, 2, 0xFFFF);
+					for(int i=0; i<100; i++);
+					
+					RCLK_L();
+	//				tmpData=0x00;
+	//				tmpData |= (Data0_GPIO_Port->IDR & Data0_Pin>>13)
+	//									|((Data1_GPIO_Port->IDR & Data1_Pin))
+	//									|((Data2_GPIO_Port->IDR & Data2_Pin)>>10)
+	//									|((Data3_GPIO_Port->IDR & Data3_Pin)<<1)
+	//									|((Data4_GPIO_Port->IDR & Data4_Pin)>>2)
+	//									|((Data5_GPIO_Port->IDR & Data5_Pin)>>6)
+	//									|((Data6_GPIO_Port->IDR & Data6_Pin)>>4)
+	//									|((Data7_GPIO_Port->IDR & Data7_Pin));	  /* ( GPIO_ReadInputData(GPIOC) ) & 0x00ff; */
+					greenVal |=  ((Data6_GPIO_Port->IDR & Data6_Pin)>>10)
+											|((Data7_GPIO_Port->IDR & Data7_Pin)>>6)
+											|((Data5_GPIO_Port->IDR & Data5_Pin)>>9)
+											|((Data6_GPIO_Port->IDR & Data6_Pin)>>7)
+											|((Data7_GPIO_Port->IDR & Data7_Pin)>>3);	
+					
+					blueVal |=   ((Data0_GPIO_Port->IDR & Data0_Pin)>>13)
+											|((Data1_GPIO_Port->IDR & Data1_Pin))
+											|((Data2_GPIO_Port->IDR & Data2_Pin)>>10)
+											|((Data0_GPIO_Port->IDR & Data0_Pin)>>10)
+											|((Data1_GPIO_Port->IDR & Data1_Pin)<<3)
+											|((Data2_GPIO_Port->IDR & Data2_Pin)>>7)
+											|((Data3_GPIO_Port->IDR & Data3_Pin)<<4)
+											|((Data4_GPIO_Port->IDR & Data4_Pin)<<1);
+											
+					mixed |= 0xff000000|redVal<<16 | greenVal<<8 | blueVal;
+					BSP_LCD_DrawPixel(xAxis, yAxis, mixed);
+					RCLK_H();
+				}
 			}
 				
 //				tmpDataHex[0]=tmpData/16+'0';
@@ -310,6 +315,7 @@ int main(void)
 			//}
 			//HAL_UART_Transmit(&huart3, (uint8_t*)"\r\n", 4, 0xFFFF);
 			//WE_L();
+			RCLK_L();
 			WRST_L();
 			RRST_L();
 			for(int i=0; i<100; i++);
